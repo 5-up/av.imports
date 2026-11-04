@@ -74,6 +74,15 @@ footer{text-align:center;color:#6d6d78;font-size:12px;padding:30px 0 100px}
 .fab{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:20;display:flex;align-items:center;gap:8px;background:#25d366;color:#05260f;font-weight:700;padding:14px 18px;border-radius:999px;box-shadow:0 10px 30px rgba(37,211,102,.4)}
 .fab svg{width:22px;height:22px}
 @media(min-width:700px){.wrap{max-width:880px}.grid{grid-template-columns:1fr 1fr}.tiles{grid-template-columns:repeat(4,1fr)}.ill{height:190px}}
+.sheet{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.sheet[hidden]{display:none}
+.sheet-bg{position:absolute;inset:0;background:rgba(0,0,0,.62)}
+.sheet-box{position:relative;width:100%;max-width:480px;background:var(--card);border:1px solid var(--line);border-radius:22px 22px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom,0px));display:grid;gap:10px}
+.sheet-box>b{font-size:17px;text-align:center;margin-bottom:4px}
+.opt{display:flex;align-items:center;gap:12px;padding:15px 16px;border-radius:14px;background:#1d1d21;border:1px solid var(--line);font-weight:600}
+.opt:hover,.opt:focus-visible{border-color:#3b3fff;outline:none}
+.opt span{font-size:22px}
+.sheet-box button{background:none;border:0;color:var(--mut);font:inherit;padding:10px;cursor:pointer}
 </style>
 </head>
 <body>
@@ -161,10 +170,10 @@ footer{text-align:center;color:#6d6d78;font-size:12px;padding:30px 0 100px}
     <h2>Visite a loja</h2>
     <p class="sec-sub">Venha conhecer os aparelhos de perto.</p>
     <div class="info">
-      <a class="row" href="https://maps.google.com/?q=Avenida+Imports+Brasilia" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.100 7-11a7 7 0 1 0-14 0c0 4.900 7 11 7 11Z"/><circle cx="12" cy="10" r="2.500"/></svg><div><b>Como chegar</b><small>Abrir no Google Maps</small></div></a>
+      <a class="row" id="goNav" href="https://www.google.com/maps/search/?api=1&amp;query=Avenida+Imports+Santa+Maria+DF" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.100 7-11a7 7 0 1 0-14 0c0 4.900 7 11 7 11Z"/><circle cx="12" cy="10" r="2.500"/></svg><div><b>Como chegar</b><small>Abrir no Google Maps ou Waze</small></div></a>
       <a class="row" href="https://wa.me/5561982722239" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.8 7L3 21l2-5.2A8 8 0 1 1 21 12Z"/></svg><div><b>WhatsApp (61) 98272-2239</b><small>Toque para conversar</small></div></a>
       <a class="row" data-ig="avenidaimportsbsb" href="https://www.instagram.com/avenidaimportsbsb/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.500" cy="6.500" r="1" fill="currentColor"/></svg><div><b>@avenidaimportsbsb</b><small>Ofertas e novidades no Instagram</small></div></a>
-      <a class="row" href="https://g.page/r/CS_ucHY0I9nLEBM/review" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="#fbbc04" style="color:#fbbc04"><path d="M12 2.500l2.900 6 6.600.9-4.800 4.600 1.200 6.500L12 17.400 6.100 20.500l1.200-6.500L2.500 9.400l6.600-.9Z"/></svg><div><b>Avalie a gente no Google</b><small>Sua opinião nos ajuda muito ★★★★★</small></div></a>
+      <a class="row" href="https://g.page/r/CS_ucHY0I9nLEBM/review" target="_blank" rel="noopener noreferrer external"><svg viewBox="0 0 24 24" fill="#fbbc04" style="color:#fbbc04"><path d="M12 2.500l2.900 6 6.600.9-4.800 4.600 1.200 6.500L12 17.400 6.100 20.500l1.200-6.500L2.500 9.400l6.600-.9Z"/></svg><div><b>Avalie a gente no Google</b><small>Sua opinião nos ajuda muito ★★★★★</small></div></a>
       <div class="row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><div><b>Segunda a Sábado</b><small>Das 8h às 18h</small></div></div>
     </div>
   </section>
@@ -189,6 +198,28 @@ footer{text-align:center;color:#6d6d78;font-size:12px;padding:30px 0 100px}
       }
     });
   });
+})();
+</script>
+<div class="sheet" id="navSheet" hidden>
+  <div class="sheet-bg" data-close></div>
+  <div class="sheet-box" role="dialog" aria-label="Como chegar">
+    <b>Como chegar</b>
+    <a class="opt" id="optMaps" href="#" target="_blank" rel="noopener"><span>📍</span>Google Maps</a>
+    <a class="opt" id="optWaze" href="#" target="_blank" rel="noopener"><span>🚗</span>Waze</a>
+    <button type="button" data-close>Cancelar</button>
+  </div>
+</div>
+<script>
+(function(){
+  var LOC='Avenida Imports Santa Maria DF';
+  var q=encodeURIComponent(LOC), sh=document.getElementById('navSheet');
+  document.getElementById('optMaps').href='https://www.google.com/maps/search/?api=1&query='+q;
+  document.getElementById('optWaze').href='https://waze.com/ul?q='+q+'&navigate=yes';
+  function close(){ sh.hidden=true; }
+  document.getElementById('goNav').addEventListener('click',function(e){ e.preventDefault(); sh.hidden=false; });
+  sh.querySelectorAll('[data-close]').forEach(function(el){ el.addEventListener('click',close); });
+  sh.querySelectorAll('.opt').forEach(function(el){ el.addEventListener('click',function(){ setTimeout(close,200); }); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') close(); });
 })();
 </script>
 </body>
