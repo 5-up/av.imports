@@ -222,5 +222,41 @@ footer{text-align:center;color:#6d6d78;font-size:12px;padding:30px 0 100px}
   document.addEventListener('keydown',function(e){ if(e.key==='Escape') close(); });
 })();
 </script>
+<script>
+(function(){
+  var ua=navigator.userAgent||'', ios=/iPhone|iPad|iPod/i.test(ua), and=/Android/i.test(ua);
+  if(!/Instagram|FBAN|FBAV|FB_IAB|Barcelona/i.test(ua)) return;
+  var enc=encodeURIComponent;
+  function q(){ try{ return new URL(document.getElementById('optMaps').href).searchParams.get('query')||''; }catch(_){ return ''; } }
+  function fallbackTimer(web){
+    var t=setTimeout(function(){ if(!document.hidden) window.open(web,'_blank'); },1500);
+    document.addEventListener('visibilitychange',function(){ if(document.hidden) clearTimeout(t); });
+  }
+  document.addEventListener('click',function(e){
+    var a=e.target.closest&&e.target.closest('a'); if(!a) return;
+    var href=a.href||'', kind=a.id==='optMaps'?'maps':a.id==='optWaze'?'waze':/g\.page\/r\//.test(href)?'review':null;
+    if(!kind) return;
+    e.preventDefault(); e.stopPropagation();
+    var Q=q(), app;
+    if(and){
+      if(kind==='maps') app='intent://www.google.com/maps/search/?api=1&query='+enc(Q)+'#Intent;scheme=https;package=com.google.android.apps.maps;S.browser_fallback_url='+enc(href)+';end';
+      else if(kind==='waze') app='intent://waze.com/ul?q='+enc(Q)+'&navigate=yes#Intent;scheme=https;package=com.waze;S.browser_fallback_url='+enc(href)+';end';
+      else app='intent://g.page/r/CS_ucHY0I9nLEBM/review#Intent;scheme=https;action=android.intent.action.VIEW;S.browser_fallback_url='+enc(href)+';end';
+      window.location.href=app;
+    }else if(ios){
+      if(kind==='maps') app='comgooglemaps://?q='+enc(Q);
+      else if(kind==='waze') app='waze://?q='+enc(Q)+'&navigate=yes';
+      else app='x-safari-https://g.page/r/CS_ucHY0I9nLEBM/review';
+      fallbackTimer(href);
+      window.location.href=app;
+    }else{ window.open(href,'_blank'); }
+  },true);
+  var b=document.createElement('div');
+  b.style.cssText='position:sticky;top:0;z-index:40;display:flex;gap:10px;align-items:center;justify-content:space-between;background:#1d1f4d;color:#e8e8ea;font-size:12.5px;line-height:1.35;padding:10px 14px;border-bottom:1px solid #3b3fff';
+  b.innerHTML='<span>Dica: para abrir os links no seu navegador, toque em <b>•••</b> e em <b>“Abrir no navegador”</b>.</span><button type="button" aria-label="Fechar" style="flex:none;background:none;border:0;color:#e8e8ea;font-size:20px;line-height:1;cursor:pointer">×</button>';
+  b.querySelector('button').addEventListener('click',function(){ b.remove(); });
+  document.body.insertBefore(b,document.body.firstChild);
+})();
+</script>
 </body>
 </html>
